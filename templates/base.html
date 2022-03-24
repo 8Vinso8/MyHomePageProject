@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        header
+        {
+            position: relative;
+            background: #2e3440;
+        }
+
+        .header-text
+        {
+            position: relative;
+            left: 10px;
+            color: aliceblue;
+        }
+
+        .nav-bar
+        {
+            position: relative;
+            left: 10px;
+         }
+
+         .button-link
+         {
+         background-color: lightslategray;
+         color: white;
+         }
+
+         .button-link:hover
+         {
+         background-color: #555;
+         }
+
+         .button-link:active
+         {
+         background-color: black;
+         }
+
+         .button-link:visited
+         {
+         background-color: #ccc;
+         }
+    </style>
+    {% block head %}{% endblock %}
+    <title>{{ title }}</title>
+</head>
+<body>
+    <header>
+        <h2 class="header-text">Борьба с депрессией</h2>
+        <div class="nav-bar">
+            <a href="/" class="button-link">Главная</a>
+            <a href="/cats" class="button-link">Котики</a>
+            <a href="/mail" class="button-link">Письмо счастья</a>
+        </div>
+    </header>
+    {% block content %}{% endblock %}
+    {% block footer %}{% endblock %}
+</body>
+</html>
