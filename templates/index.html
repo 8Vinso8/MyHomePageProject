@@ -1,31 +1,13 @@
 {% extends "base.html" %}
+
 {% block head %}
     <style>
-        body
-        {
-            display: grid;
-        }
 
-        .image
-        {
-        }
-
-        .index
-        {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border: 5px solid #FFFF00;
-            padding: 10px;
-        }
     </style>
     <title>Мяу</title>
 {% endblock %}
 
 {% block content %}
-    <div class="index">
-        {% load static %}
-        <img class="image" src="{% static "img/cat.jpg" %}" alt="Нет картинки :(">
-    </div>
+    {% load static %}
+    <img src="{% static 'img/cat.jpg' %}" alt="Нет картинки :("/>
 {% endblock %}

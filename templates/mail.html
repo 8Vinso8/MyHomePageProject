@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <style>
+
+    </style>
+    <title>Письмо счастья</title>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit">Получить письмо счастья</button>
+        </div>
+    </form>
+{% endblock %}
