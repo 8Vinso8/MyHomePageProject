@@ -1,10 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
-from django.conf import settings
 from .forms import EmailForm
-from django.http import HttpResponse, HttpResponseRedirect
-
-# Create your views here.
+from django.http import HttpResponse
 
 
 def index(request):
