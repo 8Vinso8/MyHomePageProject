@@ -2,6 +2,30 @@
 
 {% block head %}
     <style>
+        .submit-button
+        {
+            background-color: aliceblue;
+            border: 2px solid #2e3440;
+            color: black;
+            border-radius: 4px;
+            transition-duration: 0.4s;
+            margin: 5px;
+            position: relative;
+            left: 5px
+        }
+
+        .submit-button:hover
+        {
+            background-color: #2e3440;
+            border: 2px solid aliceblue;
+            color: aliceblue;
+        }
+
+        .form-actions
+        {
+            margin: 2px
+        }
+
 
     </style>
     <title>Письмо счастья</title>
@@ -10,9 +34,11 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
         <div class="form-actions">
-            <button type="submit">Получить письмо счастья</button>
+            {{ form.as_p }}
+        </div>
+        <div class="form-actions">
+            <button class="submit-button" type="submit">Получить письмо счастья</button>
         </div>
     </form>
 {% endblock %}

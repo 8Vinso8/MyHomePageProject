@@ -1,29 +1,14 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <style>
-    .inline-block
-        {
-            float:left;
-            margin-right:10px;
-            max-width: 20%;
-            max-height: 20%;
-        }
-    </style>
     <title>Котики</title>
 {% endblock %}
 
 {% block content %}
-    <div id="banner" style="overflow: hidden; display: flex;justify-content: space-around">
+    <div style="display: flex; overflow: auto">
         {% load static %}
-        <div class="inline-block">
             <img src="{% static 'img/cats/cat1.jpg' %}" alt="Нет картинки :("/>
-        </div>
-        <div class="inline-block">
             <img src="{% static 'img/cats/cat2.jpg' %}" alt="Нет картинки :("/>
-        </div>
-        <div class="inline-block">
             <img src="{% static 'img/cats/cat3.jpg' %}" alt="Нет картинки :("/>
-        </div>
     </div>
 {% endblock %}

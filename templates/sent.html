@@ -2,11 +2,16 @@
 
 {% block head %}
     <style>
-
+        .message
+        {
+            background-color: aliceblue;
+            margin: 0;
+            border-radius: 5px;
+        }
     </style>
     <title>Письмо отправлено!</title>
 {% endblock %}
 
 {% block content %}
-    <h1>Мы отправили вам письмо счастья!</h1>
+        <h1 class="message">Мы отправили вам письмо счастья!</h1>
 {% endblock %}
