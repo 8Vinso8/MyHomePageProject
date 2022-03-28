@@ -9,9 +9,9 @@
             color: black;
             border-radius: 4px;
             transition-duration: 0.4s;
-            margin: 5px;
+            margin-bottom: 5px;
             position: relative;
-            left: 5px
+            left: 25px
         }
 
         .submit-button:hover
@@ -23,16 +23,29 @@
 
         .form-actions
         {
-            margin: 2px
+            margin: 0
         }
 
+        .form-control
+        {
+            width: 250px;
+            margin: 2px;
+            border-radius: 5px;
+            background-color: aliceblue;
+            border: 2px solid #2e3440;
+        }
+
+        .mail-form
+        {
+            background-color: aliceblue;
+        }
 
     </style>
     <title>Письмо счастья</title>
 {% endblock %}
 
 {% block content %}
-    <form method="post">
+    <form class="mail-form" method="post">
         {% csrf_token %}
         <div class="form-actions">
             {{ form.as_p }}
