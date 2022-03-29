@@ -1,13 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block head %}
-    <style>
-
-    </style>
     <title>Мяу</title>
 {% endblock %}
 
 {% block content %}
-    {% load static %}
     <img src="{% static 'img/cat.jpg' %}" alt="Нет картинки :("/>
 {% endblock %}
