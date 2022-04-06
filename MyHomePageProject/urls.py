@@ -10,4 +10,3 @@ urlpatterns = [
 ]
 
 handler404 = 'MyHomePageProject.views.page_not_found_view'
-
