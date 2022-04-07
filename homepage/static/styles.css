@@ -17,8 +17,8 @@ header {
 .index {
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    margin-top: 50px;
+    transform: translate(-50%, 0);
     border: 6px solid #2e3440;
     border-radius: 5px;
     box-shadow: 0 10px 20px 20px rgba(0, 0, 0, .1);
