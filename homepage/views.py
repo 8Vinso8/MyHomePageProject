@@ -1,12 +1,18 @@
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from .forms import EmailForm, NewUserForm
+from .tokens import account_activation_token
 
 
 def index(request):
@@ -46,12 +52,49 @@ def register_request(request):
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            messages.success(request, "Вы зарегестрированы.")
+
+            current_site = get_current_site(request)
+            mail_subject = 'Активация акканта на MyHappyPage'
+            message = render_to_string('acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            email.send()
+
+            messages.success(request,
+                             "Отлично! Для регистрации осталось только подтвердить"
+                             " вашу почту. Мы отправили вам письмо с ссылкой.")
+
             return redirect("index")
+
         messages.error(request, form.errors)
     form = NewUserForm()
     return render(request=request, template_name="register.html", context={"register_form": form})
+
+
+def activate(request, uidb64, token):
+    _user = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = _user.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, _user.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        messages.success(request, "Отлично! Вы зарегестрированы.")
+        login(request, user)
+        return redirect("index")
+    else:
+        messages.error(request, "Неправильная ссылка активации!")
+        return redirect("index")
 
 
 def login_request(request):
