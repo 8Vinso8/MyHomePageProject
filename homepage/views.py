@@ -38,8 +38,8 @@ def mail(request):
 
 
 def register(request):
-    return render("register.html")
+    return render(request, "register.html", {})
 
 
 def login(request):
-    return render("login.html")
+    return render(request, "login.html", {})
