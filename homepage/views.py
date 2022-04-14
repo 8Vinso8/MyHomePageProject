@@ -35,3 +35,11 @@ def mail(request):
                 return HttpResponse('Invalid Header found')
             return render(request, "sent.html", {})
     return render(request, "mail.html", {'form': form})
+
+
+def register(request):
+    return render("register.html")
+
+
+def login(request):
+    return render("login.html")
