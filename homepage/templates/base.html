@@ -39,15 +39,32 @@
             <button class="button">Письмо счастья</button>
         </a>
     </div>
-    <div class="right-block" style="position: absolute; right: 5px; top: 45px">
-        <a href="/registration">
-            <button class="button">Регистрация</button>
-        </a>
-        <a href="/login">
-            <button class="button">Вход</button>
-        </a>
-    </div>
+    {% if user.is_authenticated %}
+        <div style="position: absolute; right: 5px; top: 0">
+            <div class="title">{{ user.username }}</div>
+            <a href="/profile">
+                <button class="button">Профиль</button>
+            </a>
+            <a href="/logout">
+                <button class="button">Выйти</button>
+            </a>
+        </div>
+    {% else %}
+        <div style="position: absolute; right: 5px; top: 45px">
+            <a href="/registration">
+                <button class="button">Регистрация</button>
+            </a>
+            <a href="/login">
+                <button class="button">Вход</button>
+            </a>
+        </div>
+    {% endif %}
 </header>
+<main>
+    <div class="container">
+        {% include 'messages.html' %}
+    </div>
+</main>
 <div class="index">
     {% block content %}{% endblock %}
 </div>
