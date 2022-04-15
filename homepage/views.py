@@ -11,8 +11,9 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from .forms import EmailForm, NewUserForm
+from .forms import EmailForm, NewUserForm, UpdateUserForm, UpdateProfileForm
 from .tokens import account_activation_token
+from .models import User
 
 
 def index(request):
@@ -119,6 +120,7 @@ def login_request(request):
     return render(request=request, template_name="login.html", context={"login_form": form})
 
 
+@login_required
 def logout_request(request):
     logout(request)
     messages.info(request, "Вы успешно вышли.")
@@ -126,5 +128,22 @@ def logout_request(request):
 
 
 @login_required
-def profile(request):
-    return render(request, "profile.html", {})
+def profile(request, username):
+    user = User.objects.get(username=username)
+    if request.user == user:
+        if request.method == 'POST':
+            user_form = UpdateUserForm(request.POST, instance=request.user)
+            profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                messages.success(request, 'Your profile is updated successfully')
+                return redirect("/profile/"+user.username)
+        else:
+            user_form = UpdateUserForm(instance=request.user)
+            profile_form = UpdateProfileForm(instance=request.user.profile)
+
+        return render(request, 'own_profile.html', {'user_form': user_form, 'profile_form': profile_form})
+    else:
+        return render(request, "profile.html", {"other_user": user})

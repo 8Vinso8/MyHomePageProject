@@ -23,42 +23,49 @@
     <link rel="shortcut icon" href="{% static 'favicon.png' %}">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
 
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     {% block head %}{% endblock %}
 </head>
 <body>
 <header>
-    <div class="title">Борьба с депрессией</div>
-    <div class="menu" style="margin-left: 5px;">
-        <a href="/">
-            <button class="button">Главная</button>
-        </a>
-        <a href="/cats">
-            <button class="button">Котики</button>
-        </a>
-        <a href="/mail">
-            <button class="button">Письмо счастья</button>
-        </a>
+    <div style="float: left; size: auto">
+        <div class="title">Борьба с депрессией</div>
+        <div class="menu" style="float: left; margin-left: 5px; margin-right: 5px">
+            <a href="/">
+                <button class="button">Главная</button>
+            </a>
+            <a href="/cats">
+                <button class="button">Котики</button>
+            </a>
+            <a href="/mail">
+                <button class="button">Письмо счастья</button>
+            </a>
+        </div>
     </div>
-    {% if user.is_authenticated %}
-        <div style="position: absolute; right: 5px; top: 0">
-            <div class="title">{{ user.username }}</div>
-            <a href="/profile">
-                <button class="button">Профиль</button>
-            </a>
-            <a href="/logout">
-                <button class="button">Выйти</button>
-            </a>
+    <div style="float: right; margin-right: 5px">
+        <div style="float: right; position: absolute; top: 45px; right: 5px" class="dropdown">
+            <button class="button">Меню</button>
+            <div class="dropdown-content" style="right: 0; background-color: #2e3440">
+                {% if user.is_authenticated %}
+                    <img class="rounded-circle account-img" src="{{  user.profile.avatar.url }} " style="cursor: pointer;"/>
+                    <div class="title">{{ user.username }}</div>
+                    <a href="/profile/{{ user.username }}">
+                        <button class="button">Профиль</button>
+                    </a>
+                    <a href="/logout">
+                        <button class="button">Выйти</button>
+                    </a>
+                {% else %}
+                    <a href="/registration">
+                        <button class="button">Регистрация</button>
+                    </a>
+                    <a href="/login">
+                        <button class="button">Вход</button>
+                    </a>
+                {% endif %}
+            </div>
         </div>
-    {% else %}
-        <div style="position: absolute; right: 5px; top: 45px">
-            <a href="/registration">
-                <button class="button">Регистрация</button>
-            </a>
-            <a href="/login">
-                <button class="button">Вход</button>
-            </a>
-        </div>
-    {% endif %}
+    </div>
 </header>
 <main>
     <div class="container">

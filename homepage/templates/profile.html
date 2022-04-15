@@ -3,9 +3,16 @@
 {% load static %}
 
 {% block head %}
-    <title>Регистрация</title>
+    <title>Профиль {{ other_user.username }}</title>
 {% endblock %}
 
 {% block content %}
-    <h1>Заглушка профиля</h1>
+    <div style="margin: auto 0; text-align: center;">
+        <h1>Профиль {{ other_user.username }}</h1>
+        <img class="rounded-circle account-img" src="{{ other_user.profile.avatar.url }}" style="cursor: pointer;"/>
+        <div style="text-align: center">
+            <p style="word-wrap: break-word; width: 300px;">{{ other_user.profile.bio }}</p>
+        </div>
+        <button style="margin: 5px">Добавить в друзья</button>
+    </div>
 {% endblock %}
