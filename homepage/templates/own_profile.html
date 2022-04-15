@@ -23,7 +23,7 @@
         </div>
     {% endif %}
     <div class="form-content">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <label class="small mb-1">Username:</label>
             {{ user_form.username }}
@@ -32,7 +32,7 @@
             <label class="small mb-1">Изменить фото профиля:</label>
             {{ profile_form.avatar }}
             <label class="small mb-1">Bio:</label> {{ profile_form.bio }}
-            <div style="margin: 5px;">
+            <div style="margin:5px">
                 <button type="submit" class="btn btn-dark btn-lg">Сохранить</button>
                 <button type="reset" class="btn btn-dark btn-lg">Сбросить</button>
             </div>

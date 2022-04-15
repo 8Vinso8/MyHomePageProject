@@ -13,6 +13,28 @@
         <div style="text-align: center">
             <p style="word-wrap: break-word; width: 300px;">{{ other_user.profile.bio }}</p>
         </div>
-        <button style="margin: 5px">Добавить в друзья</button>
+        <a href="/friends/{{ other_user.username }}">
+            <p>Список друзей</p>
+        </a>
+        {% if not friends and not friend_request %}
+            <a href="/friendship/add_friend/{{ other_user.username }}">
+                <button class="button" style="margin: 5px">Добавить в друзья</button>
+            </a>
+        {% elif not friends and friend_request == "them" %}
+            <a href="/friendship/accept/{{ other_user.username }}">
+                <button class="button" style="margin: 5px">Принять запрос дружбы</button>
+            </a>
+            <a href="/friendship/reject/{{ other_user.username }}">
+                <button class="button" style="margin: 5px">Отклонить</button>
+            </a>
+        {% elif not friends and friend_request == "you" %}
+            <a href="/friendship/cancel/{{ other_user.username }}">
+                <button class="button" style="margin: 5px">Отменить запрос дружбы</button>
+            </a>
+        {% else %}
+            <a href="/friendship/unfriend/{{ other_user.username }}">
+                <button class="button" style="margin: 5px">Убрать из друзей</button>
+            </a>
+        {% endif %}
     </div>
 {% endblock %}

@@ -10,10 +10,11 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from friendship.models import Friend
 
 from .forms import EmailForm, NewUserForm, UpdateUserForm, UpdateProfileForm
-from .tokens import account_activation_token
 from .models import User
+from .tokens import account_activation_token
 
 
 def index(request):
@@ -108,7 +109,6 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 next_url = request.POST.get('next')
-                print(next_url)
                 if next_url:
                     return redirect(next_url)
                 return redirect("index")
@@ -138,12 +138,76 @@ def profile(request, username):
             if user_form.is_valid() and profile_form.is_valid():
                 user_form.save()
                 profile_form.save()
-                messages.success(request, 'Your profile is updated successfully')
-                return redirect("/profile/"+user.username)
+                messages.success(request, 'Профиль обновлен')
+                return redirect("/profile/" + user.username)
         else:
             user_form = UpdateUserForm(instance=request.user)
             profile_form = UpdateProfileForm(instance=request.user.profile)
 
         return render(request, 'own_profile.html', {'user_form': user_form, 'profile_form': profile_form})
     else:
-        return render(request, "profile.html", {"other_user": user})
+        is_friend = Friend.objects.are_friends(request.user, user)
+        friend_request = ""
+        request_id = None
+        if not is_friend:
+            request_filter = \
+                list(filter(lambda x: x.from_user_id == user.id, Friend.objects.unrejected_requests(user=request.user)))
+            if request_filter:
+                friend_request = "them"
+                request_id = request_filter[0].id
+            request_filter = \
+                list(filter(lambda x: x.from_user_id == request.user.id, Friend.objects.unrejected_requests(user=user)))
+            if request_filter:
+                friend_request = "you"
+                request_id = request_filter[0].id
+        return render(request, "profile.html",
+                      {"other_user": user, "friends": is_friend, "friend_request": friend_request,
+                       "request_id": request_id})
+
+
+@login_required
+def friends(request, username):
+    user = User.objects.get(username=username)
+    friend_list = Friend.objects.friends(user)
+    return render(request, "friends.html", {"other_user": user, "friends": friend_list})
+
+
+@login_required
+def send_friendship_request(request, username):
+    user = User.objects.get(username=username)
+    Friend.objects.add_friend(request.user, user)
+    return redirect("/profile/" + user.username)
+
+
+@login_required
+def cancel_friendship_request(request, username):
+    user = User.objects.get(username=username)
+    request_filter = \
+        list(filter(lambda x: x.from_user_id == request.user.id, Friend.objects.unrejected_requests(user=user)))
+    request_filter[0].cancel()
+    return redirect("/profile/" + user.username)
+
+
+@login_required
+def reject_friendship_request(request, username):
+    user = User.objects.get(username=username)
+    request_filter = \
+        list(filter(lambda x: x.from_user_id == user.id, Friend.objects.unrejected_requests(user=request.user)))
+    request_filter[0].cancel()
+    return redirect("/profile/" + user.username)
+
+
+@login_required
+def accept_friend(request, username):
+    user = User.objects.get(username=username)
+    request_filter = \
+        list(filter(lambda x: x.from_user_id == user.id, Friend.objects.unrejected_requests(user=request.user)))
+    request_filter[0].accept()
+    return redirect("/profile/" + user.username)
+
+
+@login_required
+def unfriend(request, username):
+    user = User.objects.get(username=username)
+    Friend.objects.remove_friend(request.user, user)
+    return redirect("/profile/" + user.username)

@@ -47,10 +47,14 @@
             <button class="button">Меню</button>
             <div class="dropdown-content" style="right: 0; background-color: #2e3440">
                 {% if user.is_authenticated %}
-                    <img class="rounded-circle account-img" src="{{  user.profile.avatar.url }} " style="cursor: pointer;"/>
+                    <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }} "
+                         style="cursor: pointer;"/>
                     <div class="title">{{ user.username }}</div>
                     <a href="/profile/{{ user.username }}">
                         <button class="button">Профиль</button>
+                    </a>
+                    <a href="/friends/{{ user.username }}">
+                        <button class="button">Друзья</button>
                     </a>
                     <a href="/logout">
                         <button class="button">Выйти</button>

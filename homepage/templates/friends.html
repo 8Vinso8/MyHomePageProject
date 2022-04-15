@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block head %}
+    <title>Друзья {{ other_user.username }}</title>
+{% endblock %}
+
+{% block content %}
+    <div style="margin: auto 0; text-align: center;">
+        {% if friends %}
+            {% for friend in friends %}
+                <div>
+                    <a href="/profile/{{ friend.username }}">
+                        <p>{{ friend.username }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1>Нет друзей :(</h1>
+        {% endif %}
+    </div>
+{% endblock %}
