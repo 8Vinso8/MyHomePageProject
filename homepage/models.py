@@ -1,11 +1,8 @@
 from PIL import Image
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 from django.db import models
 
-
-class User(AbstractUser):
-    email = models.EmailField(unique=True)
-    friends = models.ManyToManyField("User", blank=True)
+User._meta.get_field('email')._unique = True
 
 
 class Profile(models.Model):
