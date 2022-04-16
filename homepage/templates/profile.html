@@ -16,6 +16,9 @@
         <a href="/friends/{{ other_user.username }}">
             <p>Список друзей</p>
         </a>
+        <a href="/posts/view/user/{{ other_user.username }}">
+            <p>Список постов</p>
+        </a>
         {% if not friends and not friend_request %}
             <a href="/friendship/add_friend/{{ other_user.username }}">
                 <button class="button" style="margin: 5px">Добавить в друзья</button>

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Все пользователи</title>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Все пользователи:</h1>
+        {% for active_user in all_active_users %}
+            <div>
+                <a href="/profile/{{ active_user.username }}">
+                    <p>{{ active_user.username }}</p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

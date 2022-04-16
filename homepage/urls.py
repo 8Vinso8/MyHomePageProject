@@ -18,5 +18,9 @@ urlpatterns = [
     path('friendship/reject/<username>', views.reject_friendship_request, name='reject_fr_request'),
     path('friendship/accept/<username>', views.accept_friend, name='accept_friend'),
     path('friendship/unfriend/<username>', views.unfriend, name='unfriend'),
+    path('users/all', views.all_users, name='all_users'),
+    path('posts/view/<mode>', views.view_posts, name='view_user_posts'),
+    path('posts/view/<mode>/<username>', views.view_posts, name='view_user_posts'),
+    path('posts/makePost', views.make_post, name='make_post'),
 ]
 urlpatterns += staticfiles_urlpatterns()

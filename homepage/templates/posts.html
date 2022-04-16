@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Посты друзей</title>
+{% endblock %}
+
+{% block content %}
+    <div style="text-align: center">
+        <h1>{{ mode_text }}</h1>
+        {% for post in posts %}
+            <div style="text-align: center">
+                <h2>{{ post.title }} | <a href="/profile/{{ post.author.username }}">{{ post.author.username }}</a></h2>
+                <h5>{{ post.date_time }}</h5>
+                <p>{{ post.body }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

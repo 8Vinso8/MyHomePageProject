@@ -23,3 +23,14 @@ class Profile(models.Model):
             new_img = (100, 100)
             img.thumbnail(new_img)
             img.save(self.avatar.path)
+
+
+class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+    date_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+

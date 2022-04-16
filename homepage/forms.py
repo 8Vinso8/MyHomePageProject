@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Profile
+from .models import Profile, Post
 
 
 class EmailForm(forms.Form):
@@ -47,3 +47,12 @@ class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['avatar', 'bio']
+
+
+class NewPostForm(forms.ModelForm):
+    title = forms.CharField(label="Название", required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    body = forms.CharField(label="Текст", required=True, widget=forms.Textarea(attrs={'class': 'form-conrol'}))
+
+    class Meta:
+        model = Post
+        fields = ['title', 'body']

@@ -5,15 +5,15 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from friendship.models import Friend
 
-from .forms import EmailForm, NewUserForm, UpdateUserForm, UpdateProfileForm
-from .models import User
+from .forms import EmailForm, NewUserForm, UpdateUserForm, UpdateProfileForm, NewPostForm
+from .models import User, Post
 from .tokens import account_activation_token
 
 
@@ -168,8 +168,16 @@ def profile(request, username):
 @login_required
 def friends(request, username):
     user = User.objects.get(username=username)
+    is_self = user == request.user
     friend_list = Friend.objects.friends(user)
-    return render(request, "friends.html", {"other_user": user, "friends": friend_list})
+    them_requests = None
+    you_requests = None
+    if is_self:
+        you_requests = Friend.objects.sent_requests(user=request.user)
+        them_requests = Friend.objects.unrejected_requests(user=request.user)
+    return render(request, "friends.html",
+                  {"is_self": is_self, "other_user": user, "friends": friend_list, "them_requests": them_requests,
+                   "you_requests": you_requests})
 
 
 @login_required
@@ -211,3 +219,44 @@ def unfriend(request, username):
     user = User.objects.get(username=username)
     Friend.objects.remove_friend(request.user, user)
     return redirect("/profile/" + user.username)
+
+
+@login_required
+def all_users(request):
+    all_active_users = filter(lambda x: (not x.is_superuser) and x.is_active and x != request.user, User.objects.all())
+    return render(request, "all_users.html", {"all_active_users": all_active_users})
+
+
+@login_required
+def make_post(request):
+    if request.method == 'POST':
+        form = NewPostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect("/posts/view/user/" + request.user.username)
+    return render(request, "make_post.html", {"form": NewPostForm})
+
+
+@login_required
+def view_posts(request, mode, username=None):
+    posts = None
+    mode_text = None
+    if mode not in ["all", "friends", "user"]:
+        raise Http404
+    elif mode == "user":
+        user = User.objects.get(username=username)
+        if user:
+            posts = list(filter(lambda post: post.author == user, Post.objects.all().order_by("-date_time")))
+            mode_text = "Посты " + user.username
+        else:
+            raise Http404
+    elif mode == "all":
+        posts = Post.objects.all().order_by("-date_time")
+        mode_text = "Все посты"
+    elif mode == "friends":
+        posts = list(filter(lambda post: Friend.objects.are_friends(request.user, post.author),
+                            Post.objects.all().order_by("-date_time")))
+        mode_text = "Посты друзей"
+    return render(request, "posts.html", {"posts": posts, "mode_text": mode_text})

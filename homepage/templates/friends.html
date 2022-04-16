@@ -8,6 +8,20 @@
 
 {% block content %}
     <div style="margin: auto 0; text-align: center;">
+        {% if is_self %}
+            <h1>Отправленные запросы в друзья</h1>
+            {% for request in you_requests %}
+                <a href="/profile/{{ request.to_user.username }}">
+                    <p>{{ request.to_user.username }}</p>
+                </a>
+            {% endfor %}
+            <h1>Полученные запросы в друзья</h1>
+            {% for request in them_requests %}
+                <a href="/profile/{{ request.from_user.username }}">
+                    <p>{{ request.from_user.username }}</p>
+                </a>
+            {% endfor %}
+        {% endif %}
         {% if friends %}
             {% for friend in friends %}
                 <div>
